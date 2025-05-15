@@ -11,19 +11,21 @@ local coinCount = mq.TLO.FindItemCount("=Lucky Coin")() or 0
 if coinCount > 0 then
     printf("Lucky Coin: Found %d coin(s). Big Money!", coinCount)
 
-    --abort if something is on the cursor before we start as a safety measure
+    -- abort if something is on the cursor before we start as a safety measure
     if mq.TLO.Cursor.ID() then
         print("Lucky Coin: Cursor item detected! For your safety, we will not use any coins. Aborting.")
         return false
     end
 
-    --ensure we have enough space to accept the items
+    -- ensure we have enough space to accept the items
     local freeSpace = mq.TLO.Me.FreeInventory()
     if freeSpace <= 3 then
-        --if we already have some of these in our inventory, we may not need this many slots
-        local coins = { "Diamond Coin", "Resplendent Coin", "Glimmering Coin", "Tarnished Coin", }
+        -- if we already have some of these in our inventory, we may not need this many slots
+        -- no check for DC since we can only stack to 200 and a possible prize is 99 DC. Excessive coding would be required.
+        local coins = { "Resplendent Coin", "Glimmering Coin", "Tarnished Coin", }
+
         for _, coin in ipairs(coins) do
-            if mq.TLO.FindItemCount(coin)() or 1000 < 1000 then --coins stack to 1000, if you have multiple stacks then uh... wow?
+            if mq.TLO.FindItemCount(coin)() < 800 then -- coins stack to 1000, fudge factor
                 freeSpace = freeSpace + 1
             end
         end
