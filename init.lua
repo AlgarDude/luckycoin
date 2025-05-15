@@ -37,7 +37,7 @@ if coinCount > 0 then
             end
         end
 
-        if mq.TLO.Me.FreeInventory() <= 3 then
+        if freeSpace <= 3 then
             print("Lucky Coin: Not enough free space for the possible prizes! Aborting.")
             return false
         end
