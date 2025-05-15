@@ -6,7 +6,14 @@ local mq = require('mq')
 
 print("Starting Lucky Coin Check...")
 
-local coinCount = mq.TLO.FindItemCount("=Lucky Coin")() or 0
+local server = mq.TLO.EverQuest.Server()
+
+if server ~= "Project Lazarus" then
+    printf("Lucky Coin: This is a script intended for the Project Lazarus server. The detected server is: %s. Exiting.", server)
+    return false
+end
+
+local coinCount = mq.TLO.FindItemCount("=Lucky Coin")() -- no nil safety required, returns 0 if not found
 
 if coinCount > 0 then
     printf("Lucky Coin: Found %d coin(s). Big Money!", coinCount)
@@ -25,13 +32,13 @@ if coinCount > 0 then
         local coins = { "Resplendent Coin", "Glimmering Coin", "Tarnished Coin", }
 
         for _, coin in ipairs(coins) do
-            if mq.TLO.FindItemCount(coin)() < 800 then -- coins stack to 1000, fudge factor
+            if mq.TLO.FindItemCount(coin)() < 800 then -- coins stack to 1000, fudge factor. Not coding for multiple stacks.
                 freeSpace = freeSpace + 1
             end
         end
 
         if mq.TLO.Me.FreeInventory() <= 3 then
-            print("LuckyCoin: Not enough free space for the possible prizes! Aborting.")
+            print("Lucky Coin: Not enough free space for the possible prizes! Aborting.")
             return false
         end
     end
@@ -39,13 +46,13 @@ if coinCount > 0 then
     while coinCount > 0 do
         if not mq.TLO.Cursor.ID() and mq.TLO.Me.ItemReady("Lucky Coin")() then
             mq.cmd("/useitem Lucky Coin")
-            mq.delay(50, function() return mq.TLO.Cursor.ID() end)
+            mq.delay(100, function() return mq.TLO.Cursor.ID() end)
         end
         if mq.TLO.Cursor.ID() then
             mq.cmd("/autoinventory")
-            mq.delay(50, function() return not mq.TLO.Cursor.ID() end)
+            mq.delay(100, function() return not mq.TLO.Cursor.ID() end)
         end
-        mq.delay(200) --coin reuse timer is one second
+        mq.delay(200) -- coin reuse timer is one second, this will allow multiple cursor checks in case the callback was busted
     end
 
     print("Lucky Coin: Finished using coins! Ending.")
