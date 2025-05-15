@@ -57,5 +57,5 @@ if coinCount > 0 then
 
     print("Lucky Coin: Finished using coins! Ending.")
 else
-    print("Lucky Coin: The script found no coins to use. Ending.")
+    print("Lucky Coin: The script found no coins to use! Ending.")
 end
