@@ -43,16 +43,16 @@ if coinCount > 0 then
         end
     end
 
-    while coinCount > 0 do
+    while mq.TLO.FindItemCount("=Lucky Coin")() > 0 do
         if not mq.TLO.Cursor.ID() and mq.TLO.Me.ItemReady("Lucky Coin")() then
             mq.cmd("/useitem Lucky Coin")
-            mq.delay(100, function() return mq.TLO.Cursor.ID() end)
+            mq.delay(200, function() return mq.TLO.Cursor.ID() end)
         end
+        mq.delay(300) -- coin reuse timer is one second, this will allow multiple cursor checks in case the callback was busted
         if mq.TLO.Cursor.ID() then
             mq.cmd("/autoinventory")
-            mq.delay(100, function() return not mq.TLO.Cursor.ID() end)
+            mq.delay(200, function() return not mq.TLO.Cursor.ID() end)
         end
-        mq.delay(200) -- coin reuse timer is one second, this will allow multiple cursor checks in case the callback was busted
     end
 
     print("Lucky Coin: Finished using coins! Ending.")
