@@ -1,4 +1,5 @@
 -- LuckyCoin by Algar
+-- Version 1.2
 -- A simple macroquest script to use all of your lucky coins on the emulated Project Lazarus server (with some cursor/freespace safety features).
 -- /lua run luckycoin to start. The script will see itself out when finished.
 
@@ -46,12 +47,12 @@ if coinCount > 0 then
     while mq.TLO.FindItemCount("=Lucky Coin")() > 0 do
         if not mq.TLO.Cursor.ID() and mq.TLO.Me.ItemReady("Lucky Coin")() then
             mq.cmd("/useitem Lucky Coin")
-            mq.delay(200, function() return mq.TLO.Cursor.ID() end)
+            mq.delay(250, function() return mq.TLO.Cursor.ID() end)
         end
-        mq.delay(300) -- coin reuse timer is one second, this will allow multiple cursor checks in case the callback was busted
+        mq.delay(250) -- coin reuse timer is one second, this will allow multiple cursor checks in case the callback was busted
         if mq.TLO.Cursor.ID() then
             mq.cmd("/autoinventory")
-            mq.delay(200, function() return not mq.TLO.Cursor.ID() end)
+            mq.delay(250, function() return not mq.TLO.Cursor.ID() end)
         end
     end
 
